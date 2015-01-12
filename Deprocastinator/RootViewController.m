@@ -8,9 +8,10 @@
 
 #import "RootViewController.h"
 
-@interface RootViewController () <UITableViewDataSource, UITableViewDelegate>
+@interface RootViewController () <UITableViewDataSource, UITableViewDelegate, UIGestureRecognizerDelegate>
 @property (weak, nonatomic) IBOutlet UITextField *textField;
-@property NSMutableArray *listItemsArray;
+@property NSMutableArray *tasksArray;
+@property (weak, nonatomic) IBOutlet UITableView *tasksTableView;
 
 @end
 
@@ -19,7 +20,7 @@
 #pragma view methods
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.listItemsArray = [[NSMutableArray alloc]init];
+    self.tasksArray = [[NSMutableArray alloc]init];
 }
 
 #pragma ibactions
@@ -27,19 +28,38 @@
 //
 - (IBAction)onAddButtonPressed:(UIBarButtonItem *)sender
 {
-    [self.listItemsArray addObject:self.textField.text];
+    [self.tasksArray addObject:self.textField.text];
+    self.textField.text = @"";
+    [self.view resignFirstResponder];
+    [self.tasksTableView reloadData];
 }
 
 #pragma table methods
 
 - (UITableViewCell *) tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    return nil;
+    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"TaskCell"];
+    
+    cell.textLabel.text = [self.tasksArray objectAtIndex:indexPath.row];
+    
+    return cell;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return self.listItemsArray.count;
+    return self.tasksArray.count;
+}
+
+- (IBAction)tapHandler:(UITapGestureRecognizer *)tap
+{
+    CGPoint tapLocation = [tap locationInView:self.tasksTableView];
+    NSIndexPath *indexPath = [self.tasksTableView indexPathForRowAtPoint:tapLocation];
+    [self.tasksArray objectAtIndex:indexPath];
+}
+
+- (IBAction)swipeHandler:(UISwipeGestureRecognizer *)swipe
+{
+    
 }
 
 #pragma other methods
