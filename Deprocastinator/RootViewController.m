@@ -13,6 +13,8 @@
 @property NSMutableArray *tasksArray;
 @property (weak, nonatomic) IBOutlet UITableView *tasksTableView;
 
+@property bool isEditButtonPressed;
+
 @end
 
 @implementation RootViewController
@@ -21,6 +23,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.tasksArray = [[NSMutableArray alloc]init];
+    self.isEditButtonPressed = false;
 }
 
 #pragma ibactions
@@ -32,6 +35,22 @@
     self.textField.text = @"";
     [self.view resignFirstResponder];
     [self.tasksTableView reloadData];
+}
+- (IBAction)onEditButtonPressed:(UIBarButtonItem *)editButton
+{
+    if (self.isEditButtonPressed)
+    {
+        editButton.title = @"Edit";
+    }
+    else
+    {
+        editButton.title = @"Done";
+    }
+    self.isEditButtonPressed = !self.isEditButtonPressed;
+    
+
+
+
 }
 
 #pragma table methods
@@ -52,9 +71,34 @@
 
 - (IBAction)tapHandler:(UITapGestureRecognizer *)tap
 {
+
+    if (self.isEditButtonPressed)
+    {
+        [self deleteCurrentRowTapped:tap];
+    }
+    else
+    {
+         UITableViewCell *cell = [self getCellFromTap:tap];
+         cell.backgroundColor = [UIColor greenColor];
+    }
+
+}
+
+- (void) deleteCurrentRowTapped:(UITapGestureRecognizer *)tap
+{
+    CGPoint tapLocation = [tap locationInView:self.tasksTableView];
+    NSIndexPath *indexPath = [self.tasksTableView indexPathForRowAtPoint:tapLocation];    [self.tasksArray removeObjectAtIndex:indexPath];
+    [self.tasksArray removeObjectAtIndex:indexPath];
+
+}
+
+- (UITableViewCell *) getCellFromTap: (UITapGestureRecognizer *)tap
+{
     CGPoint tapLocation = [tap locationInView:self.tasksTableView];
     NSIndexPath *indexPath = [self.tasksTableView indexPathForRowAtPoint:tapLocation];
-    [self.tasksArray objectAtIndex:indexPath];
+    UITableView *cell = [self.tasksTableView cellForRowAtIndexPath:indexPath];
+    return cell;
+
 }
 
 - (IBAction)swipeHandler:(UISwipeGestureRecognizer *)swipe

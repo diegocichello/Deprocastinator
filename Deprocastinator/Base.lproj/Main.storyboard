@@ -49,8 +49,13 @@
                     </view>
                     <navigationItem key="navigationItem" id="Lai-RD-rSs">
                         <nil key="title"/>
+                        <barButtonItem key="leftBarButtonItem" title="Edit" id="g45-CD-mnp">
+                            <connections>
+                                <action selector="onEditButtonPressed:" destination="vXZ-lx-hvc" id="Jrf-B6-JFo"/>
+                            </connections>
+                        </barButtonItem>
                         <textField key="titleView" opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" minimumFontSize="17" id="O1e-0k-DoZ">
-                            <rect key="frame" x="8" y="7" width="262" height="30"/>
+                            <rect key="frame" x="51.5" y="7" width="217.5" height="30"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <fontDescription key="fontDescription" type="system" pointSize="14"/>
                             <textInputTraits key="textInputTraits"/>
@@ -80,7 +85,7 @@
                     </connections>
                 </tapGestureRecognizer>
             </objects>
-            <point key="canvasLocation" x="649.5" y="339"/>
+            <point key="canvasLocation" x="607" y="339"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="vrI-xn-4kB">
