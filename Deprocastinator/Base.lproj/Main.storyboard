@@ -45,6 +45,7 @@
                         <connections>
                             <outletCollection property="gestureRecognizers" destination="676-Eg-Gmr" appends="YES" id="qRk-DE-qI7"/>
                             <outletCollection property="gestureRecognizers" destination="CZP-bB-nA8" appends="YES" id="dgX-qG-NKv"/>
+                            <outletCollection property="gestureRecognizers" destination="M51-vi-7iA" appends="YES" id="SZM-Ub-f9M"/>
                         </connections>
                     </view>
                     <navigationItem key="navigationItem" id="Lai-RD-rSs">
@@ -55,7 +56,7 @@
                             </connections>
                         </barButtonItem>
                         <textField key="titleView" opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" minimumFontSize="17" id="O1e-0k-DoZ">
-                            <rect key="frame" x="51.5" y="7" width="217.5" height="30"/>
+                            <rect key="frame" x="51" y="7" width="218" height="30"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <fontDescription key="fontDescription" type="system" pointSize="14"/>
                             <textInputTraits key="textInputTraits"/>
@@ -72,10 +73,15 @@
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="x5A-6p-PRh" sceneMemberID="firstResponder"/>
-                <swipeGestureRecognizer direction="right" id="676-Eg-Gmr">
+                <swipeGestureRecognizer direction="left" id="676-Eg-Gmr" userLabel="Swipe Left Gesture Recognizer">
                     <connections>
                         <action selector="swipeHandler:" destination="vXZ-lx-hvc" id="FJo-wy-NnL"/>
                         <outlet property="delegate" destination="kh9-bI-dsS" id="gae-V0-qfi"/>
+                    </connections>
+                </swipeGestureRecognizer>
+                <swipeGestureRecognizer direction="right" id="M51-vi-7iA" userLabel="Swipe Right Gesture Recognizer">
+                    <connections>
+                        <action selector="swipeHandler:" destination="vXZ-lx-hvc" id="voc-vc-zDB"/>
                     </connections>
                 </swipeGestureRecognizer>
                 <tapGestureRecognizer id="CZP-bB-nA8">

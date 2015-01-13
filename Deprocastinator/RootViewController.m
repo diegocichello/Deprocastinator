@@ -8,7 +8,7 @@
 
 #import "RootViewController.h"
 
-@interface RootViewController () <UITableViewDataSource, UITableViewDelegate, UIGestureRecognizerDelegate>
+@interface RootViewController () <UITableViewDataSource, UITableViewDelegate, UIGestureRecognizerDelegate, UITextFieldDelegate>
 @property (weak, nonatomic) IBOutlet UITextField *textField;
 @property NSMutableArray *tasksArray;
 @property (weak, nonatomic) IBOutlet UITableView *tasksTableView;
@@ -31,10 +31,13 @@
 //
 - (IBAction)onAddButtonPressed:(UIBarButtonItem *)sender
 {
-    [self.tasksArray addObject:self.textField.text];
-    self.textField.text = @"";
-    [self.view resignFirstResponder];
-    [self.tasksTableView reloadData];
+    if (![self.textField.text isEqualToString:@""])
+    {
+        [self.tasksArray addObject:self.textField.text];
+        self.textField.text = @"";
+        [self.view resignFirstResponder];
+        [self.tasksTableView reloadData];
+    }
 }
 - (IBAction)onEditButtonPressed:(UIBarButtonItem *)editButton
 {
@@ -74,7 +77,7 @@
 
     if (self.isEditButtonPressed)
     {
-        [self deleteCurrentRowTapped:tap];
+        [self deleteCurrentRow:tap];
     }
     else
     {
@@ -84,11 +87,21 @@
 
 }
 
-- (void) deleteCurrentRowTapped:(UITapGestureRecognizer *)tap
+- (void) deleteCurrentRow:(UIGestureRecognizer *)gesture
 {
-    CGPoint tapLocation = [tap locationInView:self.tasksTableView];
-    NSIndexPath *indexPath = [self.tasksTableView indexPathForRowAtPoint:tapLocation];    [self.tasksArray removeObjectAtIndex:indexPath];
-    [self.tasksArray removeObjectAtIndex:indexPath];
+    CGPoint gestureLocation = [gesture locationInView:self.tasksTableView];
+    
+    
+    NSIndexPath *indexPath = [self.tasksTableView indexPathForRowAtPoint:gestureLocation];
+    
+    if (indexPath)
+    {
+        [self.tasksArray removeObjectAtIndex:indexPath.row];
+        [self.tasksTableView reloadData];
+    }
+    
+        
+
 
 }
 
@@ -103,7 +116,24 @@
 
 - (IBAction)swipeHandler:(UISwipeGestureRecognizer *)swipe
 {
-    
+
+    if (swipe.direction == UISwipeGestureRecognizerDirectionRight)
+    {
+        [self deleteCurrentRow:swipe];
+    }
+   
+}
+
+- (BOOL)textFieldShouldReturn:(UITextField *)textField
+{
+    if (![self.textField.text isEqualToString:@""])
+    {
+        [self.tasksArray addObject:self.textField.text];
+        self.textField.text = @"";
+        [self.view resignFirstResponder];
+        [self.tasksTableView reloadData];
+    }
+    return true;
 }
 
 #pragma other methods
