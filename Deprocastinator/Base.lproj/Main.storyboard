@@ -51,7 +51,6 @@
                         </constraints>
                         <connections>
                             <outletCollection property="gestureRecognizers" destination="Mgv-pa-jqx" appends="YES" id="ONd-3q-nD4"/>
-                            <outletCollection property="gestureRecognizers" destination="uTk-Sf-Dn4" appends="YES" id="C3h-87-EpA"/>
                         </connections>
                     </view>
                     <navigationItem key="navigationItem" id="Lai-RD-rSs">
@@ -66,6 +65,9 @@
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <fontDescription key="fontDescription" type="system" pointSize="14"/>
                             <textInputTraits key="textInputTraits"/>
+                            <connections>
+                                <outlet property="delegate" destination="kh9-bI-dsS" id="Imc-4Y-Diy"/>
+                            </connections>
                         </textField>
                         <barButtonItem key="rightBarButtonItem" systemItem="add" id="nug-GD-iUB">
                             <connections>
@@ -84,11 +86,6 @@
                         <action selector="swipeHandler:" destination="vXZ-lx-hvc" id="N6e-8q-GAh"/>
                     </connections>
                 </swipeGestureRecognizer>
-                <tapGestureRecognizer id="uTk-Sf-Dn4">
-                    <connections>
-                        <action selector="tapHandler:" destination="vXZ-lx-hvc" id="bOh-OW-mvf"/>
-                    </connections>
-                </tapGestureRecognizer>
             </objects>
             <point key="canvasLocation" x="607" y="339"/>
         </scene>

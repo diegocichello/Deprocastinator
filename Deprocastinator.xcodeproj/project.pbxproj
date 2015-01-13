@@ -14,6 +14,7 @@
 		29BCF6EF1A647AC5000E0012 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 29BCF6EE1A647AC5000E0012 /* Images.xcassets */; };
 		29BCF6F21A647AC5000E0012 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 29BCF6F01A647AC5000E0012 /* LaunchScreen.xib */; };
 		29BCF6FE1A647AC5000E0012 /* DeprocastinatorTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 29BCF6FD1A647AC5000E0012 /* DeprocastinatorTests.m */; };
+		29BCF70F1A658835000E0012 /* Task.m in Sources */ = {isa = PBXBuildFile; fileRef = 29BCF70E1A658835000E0012 /* Task.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -40,6 +41,8 @@
 		29BCF6F71A647AC5000E0012 /* DeprocastinatorTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = DeprocastinatorTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		29BCF6FC1A647AC5000E0012 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		29BCF6FD1A647AC5000E0012 /* DeprocastinatorTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DeprocastinatorTests.m; sourceTree = "<group>"; };
+		29BCF70D1A658835000E0012 /* Task.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Task.h; sourceTree = "<group>"; };
+		29BCF70E1A658835000E0012 /* Task.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Task.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -89,6 +92,8 @@
 				29BCF6EE1A647AC5000E0012 /* Images.xcassets */,
 				29BCF6F01A647AC5000E0012 /* LaunchScreen.xib */,
 				29BCF6E11A647AC5000E0012 /* Supporting Files */,
+				29BCF70D1A658835000E0012 /* Task.h */,
+				29BCF70E1A658835000E0012 /* Task.m */,
 			);
 			path = Deprocastinator;
 			sourceTree = "<group>";
@@ -219,6 +224,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				29BCF70F1A658835000E0012 /* Task.m in Sources */,
 				29BCF6EA1A647AC5000E0012 /* RootViewController.m in Sources */,
 				29BCF6E71A647AC5000E0012 /* AppDelegate.m in Sources */,
 				29BCF6E41A647AC5000E0012 /* main.m in Sources */,
@@ -412,6 +418,7 @@
 				29BCF7031A647AC5000E0012 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		29BCF7041A647AC5000E0012 /* Build configuration list for PBXNativeTarget "DeprocastinatorTests" */ = {
 			isa = XCConfigurationList;
@@ -420,6 +427,7 @@
 				29BCF7061A647AC5000E0012 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

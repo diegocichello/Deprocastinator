@@ -7,8 +7,9 @@
 //
 
 #import "RootViewController.h"
+#import "Task.h"
 
-@interface RootViewController () <UITableViewDataSource, UITableViewDelegate, UIGestureRecognizerDelegate, UITextFieldDelegate, UIAlertViewDelegate>
+@interface RootViewController () <UITableViewDataSource, UITableViewDelegate, UIGestureRecognizerDelegate, UITextFieldDelegate, UIAlertViewDelegate,UIScrollViewDelegate>
 @property (weak, nonatomic) IBOutlet UITextField *textField;
 @property NSMutableArray *tasksArray;
 @property (weak, nonatomic) IBOutlet UITableView *tasksTableView;
@@ -34,20 +35,34 @@
 
 #pragma ibactions
 
-//
+//----------------------- IBActions ----------------------------------------------------------
+
+//Add Button method
 - (IBAction)onAddButtonPressed:(UIBarButtonItem *)sender
 {
+    //prevent from adding an empty string
     if (![self.textField.text isEqualToString:@""])
     {
-        [self.tasksArray addObject:self.textField.text];
+        //Create a new instance of Task, set its property taskName
+        //And add it to our array
+        Task *task = [[Task alloc]init];
+        task.taskName = self.textField.text;
+
+
+        [self.tasksArray addObject:task];
         self.textField.text = @"";
-        
-        [self.tasksTableView reloadData];
+
         [self.view resignFirstResponder];
+        [self.tasksTableView reloadData];
+
     }
 }
+
+//Edit Button
 - (IBAction)onEditButtonPressed:(UIBarButtonItem *)editButton
 {
+
+    //Change if its Done, or Editing
 
     if (self.isEditButtonPressed)
     {
@@ -66,34 +81,93 @@
 
 }
 
+
+
+
+//Swipe handler
+- (IBAction)swipeHandler:(UISwipeGestureRecognizer *)swipe
+{
+
+    //Grab the current Task swiped
+    CGPoint swipeLocation = [swipe locationInView:self.tasksTableView];
+    NSIndexPath *indexPath = [self.tasksTableView indexPathForRowAtPoint:swipeLocation];
+    Task *task = [self.tasksArray objectAtIndex:indexPath.row];
+
+
+
+    //If its is a swipe to right change the color of its property taskColor
+    //Black -> Green -> Yellow -> Red
+
+    if (swipe.direction == UISwipeGestureRecognizerDirectionRight)
+    {
+
+        if (task.taskColor == [UIColor greenColor])
+        {
+            task.taskColor = [UIColor yellowColor];
+        }
+        else if (task.taskColor== [UIColor yellowColor])
+        {
+            task.taskColor = [UIColor redColor];
+        }
+        else if (task.taskColor == [UIColor redColor])
+        {
+            task.taskColor = [UIColor blackColor];
+
+        }
+        else
+        {
+            task.taskColor= [UIColor greenColor];
+        }
+
+        [self.tasksTableView reloadData];
+        
+        
+        
+        
+    }
+    
+}
+
 #pragma table methods
 
+
+//Method that updates the tableView
 - (UITableViewCell *) tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    //Creates a new instance of cell
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"TaskCell"];
-    
-    cell.textLabel.text = [self.tasksArray objectAtIndex:indexPath.row];
+
+    //Creates a new instance of task and update the cell using Task properties
+    Task *task = [self.tasksArray objectAtIndex:indexPath.row];
+
+    cell.textLabel.text = task.taskName;
+    cell.textLabel.textColor = task.taskColor;
     
     return cell;
 }
 
+
+//Method that bring back the number os objects into the Array
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     return self.tasksArray.count;
 }
 
-
-- (IBAction)tapHandler:(UITapGestureRecognizer *)tap
+- (void)tableView:(UITableView *)tableView didDeselectRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    Task *task = [self.tasksArray objectAtIndex:indexPath.row];
 
-    if (self.isEditButtonPressed)
-      {
-         UITableViewCell *cell = [self getCellFromTap:tap];
-         cell.textLabel.backgroundColor = [UIColor greenColor];
-    }
+    task.taskColor = [UIColor greenColor];
+
+    [self.tasksTableView reloadData];
+
+
 
 }
 
+
+
+//Delete Current Row Method
 
 - (void) deleteCurrentRow:(UIGestureRecognizer *)gesture
 {
@@ -115,37 +189,18 @@
 
 }
 
+//Method that returns the cell you tapped or swiped
 
-
-- (UITableViewCell *) getCellFromTap: (UIGestureRecognizer *)tap
+- (UITableViewCell *) getCellFromGesture: (UIGestureRecognizer *)gesture
 {
-    CGPoint tapLocation = [tap locationInView:self.tasksTableView];
-    NSIndexPath *indexPath = [self.tasksTableView indexPathForRowAtPoint:tapLocation];
+    CGPoint gestureLocation = [gesture locationInView:self.tasksTableView];
+    NSIndexPath *indexPath = [self.tasksTableView indexPathForRowAtPoint:gestureLocation];
     UITableView *cell = [self.tasksTableView cellForRowAtIndexPath:indexPath];
     return cell;
 
 }
 
-
-- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
-{
-    
-    if(buttonIndex==1)
-    {
-
-        [self.tasksArray removeObjectAtIndex:self.indexPathDeleted.row];
-        [self.tasksTableView deleteRowsAtIndexPaths:@[self.indexPathDeleted] withRowAnimation:UITableViewRowAnimationFade];
-
-
-        [self.tasksTableView reloadData];
-
-
-
-
-    }
-
-}
-
+//Method that sets the do the delete button real time without editing it
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
 {
 
@@ -159,70 +214,68 @@
 
     [deleteAlert show];
     self.indexPathDeleted = indexPath;
-
-
-
+    
+    
+    
 }
-
+//Method that check if you can move Rows
 - (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath
 {
     return YES;
 }
 
+//Method that is trigger when you move rows
 - (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)sourceIndexPath toIndexPath:(NSIndexPath *)destinationIndexPath
 {
-    
+    //Just create a dummy String to hold data, and exchange rows.
     NSString *stringToBeMoved = [self.tasksArray objectAtIndex:sourceIndexPath.row];
     [self.tasksArray removeObjectAtIndex:sourceIndexPath.row];
     [self.tasksArray insertObject:stringToBeMoved atIndex:destinationIndexPath.row];
 }
 
-
-- (IBAction)swipeHandler:(UISwipeGestureRecognizer *)swipe
+/*
+- (void)scrollViewDidEndScrollingAnimation:(UIScrollView *)scrollView
 {
-
-
-
-    if (swipe.direction == UISwipeGestureRecognizerDirectionLeft)
-    {
-        //[self deleteCurrentRow:swipe];
-    }
-    else if (swipe.direction == UISwipeGestureRecognizerDirectionRight)
-    {
-        UITableViewCell *cell = [self getCellFromTap:swipe];
-
-        if (cell.textLabel.textColor == [UIColor greenColor])
-        {
-            cell.textLabel.textColor = [UIColor yellowColor];
-        }
-        else if (cell.textLabel.textColor == [UIColor yellowColor])
-        {
-            cell.textLabel.textColor = [UIColor redColor];
-        }
-        else if (cell.textLabel.textColor == [UIColor redColor])
-        {
-            cell.textLabel.textColor = [UIColor blackColor];
-
-        }
-        else
-        {
-            cell.textLabel.textColor = [UIColor greenColor];
-        }
-
-
-
-
-
-
-    }
-   
+    [self.tasksTableView reloadData];
 }
+ */
+
+
+#pragma other methods
+
+//--------------Other Methods--------------------------------------------
+
+
+//Delegated function from alert view to get the button tapped
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    
+    if(buttonIndex==1)
+    {
+
+        [self.tasksArray removeObjectAtIndex:self.indexPathDeleted.row];
+        [self.tasksTableView deleteRowsAtIndexPaths:@[self.indexPathDeleted] withRowAnimation:UITableViewRowAnimationFade];
+        [self.tasksTableView reloadData];
+
+    }
+
+}
+
+
+
+//Delegated function from textField
+
+
 
 - (BOOL)textFieldShouldReturn:(UITextField *)textField
 {
     if (![self.textField.text isEqualToString:@""])
     {
-        [self.tasksArray addObject:self.textField.text];
+        Task *task = [[Task alloc]init];
+
+        task.taskName = self.textField.text;
+
+        [self.tasksArray addObject:task];
         self.textField.text = @"";
         [self.view resignFirstResponder];
         [self.tasksTableView reloadData];
@@ -230,7 +283,7 @@
     return true;
 }
 
-#pragma other methods
+
 
 
 
