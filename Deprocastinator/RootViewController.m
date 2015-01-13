@@ -27,6 +27,8 @@
     self.tasksArray = [[NSMutableArray alloc]init];
     self.isEditButtonPressed = false;
     
+    
+    
 
 }
 
@@ -39,8 +41,9 @@
     {
         [self.tasksArray addObject:self.textField.text];
         self.textField.text = @"";
-        [self.view resignFirstResponder];
+        
         [self.tasksTableView reloadData];
+        [self.view resignFirstResponder];
     }
 }
 - (IBAction)onEditButtonPressed:(UIBarButtonItem *)editButton
@@ -49,10 +52,12 @@
     if (self.isEditButtonPressed)
     {
         editButton.title = @"Edit";
+        [self.tasksTableView setEditing:false animated:false];
     }
     else
     {
         editButton.title = @"Done";
+        [self.tasksTableView setEditing:true animated:true];
     }
     self.isEditButtonPressed = !self.isEditButtonPressed;
     
@@ -77,22 +82,18 @@
     return self.tasksArray.count;
 }
 
-/*
+
 - (IBAction)tapHandler:(UITapGestureRecognizer *)tap
 {
 
     if (self.isEditButtonPressed)
-    {
-        [self deleteCurrentRow:tap];
-    }
-    else
-    {
+      {
          UITableViewCell *cell = [self getCellFromTap:tap];
-         cell.backgroundColor = [UIColor greenColor];
+         cell.textLabel.backgroundColor = [UIColor greenColor];
     }
 
 }
- */
+
 
 - (void) deleteCurrentRow:(UIGestureRecognizer *)gesture
 {
@@ -161,13 +162,21 @@
 
 
 
-
-
-
-
-
-
 }
+
+- (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    return YES;
+}
+
+- (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)sourceIndexPath toIndexPath:(NSIndexPath *)destinationIndexPath
+{
+    
+    NSString *stringToBeMoved = [self.tasksArray objectAtIndex:sourceIndexPath.row];
+    [self.tasksArray removeObjectAtIndex:sourceIndexPath.row];
+    [self.tasksArray insertObject:stringToBeMoved atIndex:destinationIndexPath.row];
+}
+
 
 - (IBAction)swipeHandler:(UISwipeGestureRecognizer *)swipe
 {
@@ -192,7 +201,7 @@
         }
         else if (cell.textLabel.textColor == [UIColor redColor])
         {
-            cell.textLabel.textColor = [UIColor clearColor];
+            cell.textLabel.textColor = [UIColor blackColor];
 
         }
         else
