@@ -8,10 +8,12 @@
 
 #import "RootViewController.h"
 
-@interface RootViewController () <UITableViewDataSource, UITableViewDelegate, UIGestureRecognizerDelegate, UITextFieldDelegate>
+@interface RootViewController () <UITableViewDataSource, UITableViewDelegate, UIGestureRecognizerDelegate, UITextFieldDelegate, UIAlertViewDelegate>
 @property (weak, nonatomic) IBOutlet UITextField *textField;
 @property NSMutableArray *tasksArray;
 @property (weak, nonatomic) IBOutlet UITableView *tasksTableView;
+
+@property NSIndexPath *indexPathDeleted;
 
 @property bool isEditButtonPressed;
 
@@ -24,6 +26,8 @@
     [super viewDidLoad];
     self.tasksArray = [[NSMutableArray alloc]init];
     self.isEditButtonPressed = false;
+    
+
 }
 
 #pragma ibactions
@@ -41,6 +45,7 @@
 }
 - (IBAction)onEditButtonPressed:(UIBarButtonItem *)editButton
 {
+
     if (self.isEditButtonPressed)
     {
         editButton.title = @"Edit";
@@ -72,6 +77,7 @@
     return self.tasksArray.count;
 }
 
+/*
 - (IBAction)tapHandler:(UITapGestureRecognizer *)tap
 {
 
@@ -86,6 +92,7 @@
     }
 
 }
+ */
 
 - (void) deleteCurrentRow:(UIGestureRecognizer *)gesture
 {
@@ -93,10 +100,12 @@
     
     
     NSIndexPath *indexPath = [self.tasksTableView indexPathForRowAtPoint:gestureLocation];
+    NSArray *indexPathToBeDeleted = [NSArray arrayWithObject:indexPath];
     
     if (indexPath)
     {
         [self.tasksArray removeObjectAtIndex:indexPath.row];
+        [self.tasksTableView deleteRowsAtIndexPaths:indexPathToBeDeleted withRowAnimation:(UITableViewRowAnimationFade)];
         [self.tasksTableView reloadData];
     }
     
@@ -105,7 +114,9 @@
 
 }
 
-- (UITableViewCell *) getCellFromTap: (UITapGestureRecognizer *)tap
+
+
+- (UITableViewCell *) getCellFromTap: (UIGestureRecognizer *)tap
 {
     CGPoint tapLocation = [tap locationInView:self.tasksTableView];
     NSIndexPath *indexPath = [self.tasksTableView indexPathForRowAtPoint:tapLocation];
@@ -114,12 +125,86 @@
 
 }
 
+
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    
+    if(buttonIndex==1)
+    {
+
+        [self.tasksArray removeObjectAtIndex:self.indexPathDeleted.row];
+        [self.tasksTableView deleteRowsAtIndexPaths:@[self.indexPathDeleted] withRowAnimation:UITableViewRowAnimationFade];
+
+
+        [self.tasksTableView reloadData];
+
+
+
+
+    }
+
+}
+
+- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
+{
+
+
+    UIAlertView *deleteAlert = [[UIAlertView alloc]init];
+    deleteAlert.delegate = self;
+    deleteAlert.title =@"Delete warning!";
+    deleteAlert.message = @"Are you sure you want to delete?";
+    [deleteAlert addButtonWithTitle:@"No!"];
+    [deleteAlert addButtonWithTitle:@"Yes"];
+
+    [deleteAlert show];
+    self.indexPathDeleted = indexPath;
+
+
+
+
+
+
+
+
+
+}
+
 - (IBAction)swipeHandler:(UISwipeGestureRecognizer *)swipe
 {
 
-    if (swipe.direction == UISwipeGestureRecognizerDirectionRight)
+
+
+    if (swipe.direction == UISwipeGestureRecognizerDirectionLeft)
     {
-        [self deleteCurrentRow:swipe];
+        //[self deleteCurrentRow:swipe];
+    }
+    else if (swipe.direction == UISwipeGestureRecognizerDirectionRight)
+    {
+        UITableViewCell *cell = [self getCellFromTap:swipe];
+
+        if (cell.textLabel.textColor == [UIColor greenColor])
+        {
+            cell.textLabel.textColor = [UIColor yellowColor];
+        }
+        else if (cell.textLabel.textColor == [UIColor yellowColor])
+        {
+            cell.textLabel.textColor = [UIColor redColor];
+        }
+        else if (cell.textLabel.textColor == [UIColor redColor])
+        {
+            cell.textLabel.textColor = [UIColor clearColor];
+
+        }
+        else
+        {
+            cell.textLabel.textColor = [UIColor greenColor];
+        }
+
+
+
+
+
+
     }
    
 }
